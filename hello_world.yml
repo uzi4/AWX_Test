@@ -7,8 +7,5 @@
         msg: "Hello World!"
 
     - name: Get hostname
-      ansible.windows.win_hostname:
-
-    - name: Get hostname
       win_shell: |
         Write-Host "Hello World from Uzair!"
