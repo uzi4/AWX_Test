@@ -3,7 +3,14 @@
   gather_facts: no
   tasks:
     - name: Get hostname
-      ansible.windows.win_hostname:
+      win_shell: |
+        hostname
+      register: hostname_output
+
+    - name: Show hostname
+      debug:
+        var: hostname_output.stdout_lines   
+    
     - name: Get IP Address
       win_shell: |
         (Get-NetIPAddress -AddressFamily IPv4 |
