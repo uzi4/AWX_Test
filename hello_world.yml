@@ -6,6 +6,11 @@
       debug:
         msg: "Hello World!"
 
-    - name: Get hostname
+    - name: Execute PowerShell command
       win_shell: |
-        Write-Host "Hello World from Uzair!"
+        Write-Host "Hello World from DC01 server!"
+        register: result
+
+    - name: Show command output
+      debug:
+        var: result.stdout
