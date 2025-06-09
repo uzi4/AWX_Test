@@ -14,7 +14,7 @@
     - name: Get IP Address
       win_shell: |
         (Get-NetIPAddress -AddressFamily IPv4 |
-        Where-Object {$_.InterfaceAlias -ne "Loopback"}).IPAddress
+        Where-Object {$_.InterfaceAlias -notlike "*Loopback*"}).IPAddress
       register: ip_address_output
 
     - name: Show IP Address
