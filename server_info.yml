@@ -1,0 +1,15 @@
+- name: Display server hostname and IP address
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Get hostname
+      ansible.windows.win_hostname:
+    - name: Get IP Address
+      win_shell: |
+        (Get-NetIPAddress -AddressFamily IPv4 |
+        Where-Object {$_.InterfaceAlias -ne "Loopback"}).IPAddress
+      register: ip_address_output
+
+    - name: Show IP Address
+      debug:
+        var: ip_address_output.stdout_lines

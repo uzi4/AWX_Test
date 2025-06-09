@@ -1,0 +1,7 @@
+- name: Display server hostname and IP address
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Show gathered facts
+      debug:
+        var: ansible_facts
