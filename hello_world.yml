@@ -9,7 +9,7 @@
     - name: Execute PowerShell command
       win_shell: |
         Write-Host "Hello World from DC01 server!"
-        register: result
+      register: result
 
     - name: Show command output
       debug:
