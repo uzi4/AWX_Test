@@ -1,0 +1,8 @@
+- name: Display server hostname and IP address
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Display message if running on VMware
+      debug:
+        msg: "This is a virtual server running on VMware"
+      when: ansible_facts['virtualization_type'] == "VMware"
