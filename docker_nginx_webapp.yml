@@ -4,7 +4,7 @@
   gather_facts: no
 
   vars:
-    html_path: /home/$USER/nginx-content
+    html_path: /home/uzair/nginx-content
 
   tasks:
 
