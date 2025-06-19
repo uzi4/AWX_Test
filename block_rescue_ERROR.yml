@@ -1,6 +1,6 @@
 ---
 - name: Manage Windows Server Info
-  hosts: all
+  hosts: dc01
   gather_facts: no
   tasks:
     - name: Main task block with error handling
