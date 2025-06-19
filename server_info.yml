@@ -9,14 +9,15 @@
 
     - name: Show hostname
       debug:
-        var: hostname_output.stdout_lines   
+        var: hostname_output.stdout_lines
+   
     
     - name: Get IP Address
       win_shell: |
-        (Get-NetIPAddress -AddressFamily IPv4 |
-        Where-Object {$_.InterfaceAlias -notlike "*Loopback*"}).IPAddress
+        (Get-NetIPAddress -AddressFamily IPv4).IPAddress
       register: ip_address_output
 
     - name: Show IP Address
       debug:
         var: ip_address_output.stdout_lines
+

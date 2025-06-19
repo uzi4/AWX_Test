@@ -1,16 +1,8 @@
 - name: Hello World Sample
-  hosts: dc01
+  hosts: localhost
   gather_facts: false
   tasks:
     - name: Hello Message
       debug:
         msg: "Hello World!"
-
-    - name: Execute PowerShell command
-      win_shell: |
-        Write-Host "Hello World from DC01 server!"
-      register: result
-
-    - name: Show command output
-      debug:
-        var: result.stdout
+    

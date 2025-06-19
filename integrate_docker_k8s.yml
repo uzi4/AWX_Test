@@ -1,0 +1,44 @@
+---
+- name: Deploy nginx pod
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    namespace: demo-space2
+
+  tasks:
+
+    - name: Create namespace
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Namespace
+        name: "{{ namespace }}"
+        state: present
+
+    - name: Deploy nginx pod
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Pod
+        namespace: "{{ namespace }}"
+        name: nginx-pod2
+        state: present
+        definition:
+          metadata:
+            labels:
+              app: nginx
+          spec:
+            containers:
+              - name: nginx
+                image: nginx
+                ports:
+                  - containerPort: 80
+
+    - name: Get list of pods
+      kubernetes.core.k8s_info:
+        kind: Pod
+        namespace: "{{ namespace }}"
+      register: pod_info
+
+    - name: Display pod list
+      debug:
+        var: pod_info.resources

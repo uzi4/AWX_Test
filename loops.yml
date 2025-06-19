@@ -1,0 +1,23 @@
+---
+- name: Manage Windows Server Info
+  hosts: all
+  gather_facts: no
+  vars:
+    services_to_check:
+      - w32time
+      - bits
+      - spooler
+
+  tasks:
+    - name: Main task block with error handling
+      block:
+        - name: Check status of important services
+          win_service:
+            name: "{{ item }}"
+          loop: "{{ services_to_check }}"
+
+      rescue:
+        - name: Handle errors if Retrieving service status fails
+          debug:
+            msg: "An error occurred while fetching service information."
+

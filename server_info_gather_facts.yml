@@ -5,3 +5,4 @@
     - name: Show gathered facts
       debug:
         var: ansible_facts
+

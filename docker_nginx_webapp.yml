@@ -1,0 +1,58 @@
+---
+- name: Deploy nginx container with custom webpage (AWX Server)
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    html_path: /home/$USER/nginx-content
+
+  tasks:
+
+    - name: Ensure nginx-content directory exists
+      file:
+        path: "{{ html_path }}"
+        state: directory
+
+
+    - name: Create a sample HTML page
+      copy:
+        dest: "{{ html_path }}/index.html"
+        content: |
+          <html>
+          <head><title>Welcome</title></head>
+          <body><h1>Hello from Ansible & NGINX!</h1></body>
+          </html>
+
+
+    - name: Pull nginx image
+      community.docker.docker_image:
+        name: nginx
+        source: pull
+
+
+    - name: Start nginx container with volume
+      community.docker.docker_container:
+        name: webapp-nginx
+        image: nginx
+        state: started
+        ports:
+          - "8080:80"
+        volumes:
+          - "{{ html_path }}:/usr/share/nginx/html:ro"
+   
+
+    - name: Wait for nginx to start
+      wait_for:
+        port: 8080
+        delay: 5
+        timeout: 30
+
+
+    - name: Display container status
+      command: docker ps
+      register: docker_output
+
+
+    - name: Show container info
+      debug:
+        var: docker_output.stdout_lines

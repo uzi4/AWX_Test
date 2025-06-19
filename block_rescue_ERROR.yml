@@ -1,0 +1,30 @@
+---
+- name: Manage Windows Server Info
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Main task block with error handling
+      block:
+        - name: Get Hostname
+          win_shell: hostname
+          register: hostname_output
+          
+        - name: Display hostname
+          debug:
+            var: hostname_output.stdout_lines
+
+        - name: Get IP Address
+          win_shell: (Get-NetIPAddress -AddressFamily IPv).IPAddress
+          register: ip_address_output
+
+        - name: Display IP Address
+          debug:
+            var: ip_address_output.stdout_lines
+      rescue:
+        - name: Handle errors if hostname or IP retrieval fails
+          debug:
+            msg: "An error occurred while fetching server information."
+      always:
+        - name: Always run this task
+          debug:
+            msg: "Block execution completed, whether success or failure."
