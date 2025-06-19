@@ -1,6 +1,6 @@
 ---
 - name: Deploy nginx container with custom webpage (AWX Server)
-  hosts: localhost
+  hosts: UbuntuHost
   gather_facts: no
 
   vars:
