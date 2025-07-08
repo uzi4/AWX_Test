@@ -1,7 +1,7 @@
 ---
 - name: Get Juniper hostname and configure interface
   hosts: all
-  connection: local
+  connection: ansible.netcommon.network_cli
   gather_facts: no
   vars:
     ansible_network_os: junos
