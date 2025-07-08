@@ -1,0 +1,17 @@
+---
+- name: Get Juniper hostname and configure interface
+  hosts: all
+  connection: local
+  gather_facts: no
+  vars:
+    ansible_network_os: junos
+    ansible_connection: ansible.netcommon.network_cli
+
+  tasks:
+
+    - name: Display Juniper hostname
+      junipernetworks.junos.junos_facts:
+
+    - name: Show the hostname
+      debug:
+        msg: "The hostname is {{ ansible_net_hostname }}"      
