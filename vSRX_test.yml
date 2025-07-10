@@ -1,6 +1,0 @@
-- name: Test vSRX connection
-  hosts: all
-  gather_facts: no
-  tasks:
-    - name: Ping device
-      ping:

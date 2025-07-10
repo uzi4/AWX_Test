@@ -1,0 +1,42 @@
+- name: Configure ge-0/0/0 interface on Juniper vSRX
+  hosts: vsrx
+  gather_facts: no
+
+  tasks:
+    - name: Get interfaces
+      junipernetworks.junos.junos_command:
+        commands:
+        - show interfaces terse
+      register: all_ifaces
+
+    - name: Filter ge-* interfaces
+      debug:
+        msg: "{{ item }}"
+      loop: "{{ all_ifaces.stdout_lines[0] | select('search', 'ge-') | list }}"
+
+    - name: Configure ge-0/0/0
+      junipernetworks.junos.junos_config:
+        lines:
+          - set interfaces ge-0/0/0 unit 0 family inet address 192.168.10.10/24
+
+    - name: Show config for ge-0/0/0
+      junipernetworks.junos.junos_command:
+        commands:
+          - show configuration interfaces ge-0/0/0
+      register: config_output
+
+    - name: Display config
+      debug:
+        var: config_output.stdout_lines
+
+    - name: Verify interfaces
+      junipernetworks.junos.junos_command:
+        commands:
+        - show interfaces terse
+      register: all_ifaces
+
+    - name: Filter ge-* interfaces
+      debug:
+        msg: "{{ item }}"
+      loop: "{{ all_ifaces.stdout_lines[0] | select('search', 'ge-') | list }}"
+      
