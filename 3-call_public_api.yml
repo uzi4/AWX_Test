@@ -1,0 +1,19 @@
+---
+- name: Get list of cat breeds
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+
+    - name: Call the Cat Facts API for breeds
+      uri:
+        url: https://catfact.ninja/breeds?limit=10
+        method: GET
+        return_content: yes
+        headers:
+          Accept: application/json
+      register: cat_breeds
+
+    - name: Display first cat breed name
+      debug:
+        msg: "{{ cat_breeds.json.data }}"
