@@ -4,7 +4,7 @@
   gather_facts: no
 
   vars:
-    html_path: /home/uzair/nginx-content
+    html_path: /home/$USER/nginx-content
 
   tasks:
 
@@ -47,4 +47,3 @@
       file:
         path: "{{ html_path }}/index.html"
         mode: '0644'
-
