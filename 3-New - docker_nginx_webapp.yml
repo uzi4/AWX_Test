@@ -1,10 +1,10 @@
 ---
-- name: Deploy nginx container with custom webpage (AWX Server)
+- name: Deploy nginx container with custom webpage (module-based)
   hosts: 192.168.5.8
   gather_facts: no
 
   vars:
-    html_path: /tmp/nginx-content
+    html_path: /home/uzair/nginx-content
 
   tasks:
 
@@ -13,22 +13,19 @@
         path: "{{ html_path }}"
         state: directory
 
-
-    - name: Create a sample HTML page
+    - name: Create sample HTML page
       copy:
         dest: "{{ html_path }}/index.html"
         content: |
           <html>
           <head><title>Welcome</title></head>
-          <body><h1>Hello from Ansible & NGINX!</h1></body>
+          <body><h1>Hello from Ansible & NGINX (Docker module)!</h1></body>
           </html>
-
 
     - name: Pull nginx image
       community.docker.docker_image:
         name: nginx
         source: pull
-
 
     - name: Start nginx container with volume
       community.docker.docker_container:
@@ -39,20 +36,15 @@
           - "8080:80"
         volumes:
           - "{{ html_path }}:/usr/share/nginx/html:ro"
-   
 
-    - name: Wait for nginx to start
-      wait_for:
-        port: 8080
-        delay: 5
-        timeout: 30
+    - name: Set directory permission to be world-readable
+      file:
+        path: "{{ html_path }}"
+        mode: '0755'
+        recurse: yes
 
+    - name: Set index.html file permission to be world-readable
+      file:
+        path: "{{ html_path }}/index.html"
+        mode: '0644'
 
-    - name: Display container status
-      command: docker ps
-      register: docker_output
-
-
-    - name: Show container info
-      debug:
-        var: docker_output.stdout_lines
