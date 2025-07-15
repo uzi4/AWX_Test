@@ -5,15 +5,31 @@
   gather_facts: false
 
   tasks:
-    - name: Copy Azure JSON to the correct path
+    - name: Ensure .azure directory exists
+      file:
+        path: /home/ansible/.azure
+        state: directory
+        mode: 0700
+
+    - name: Write Azure JSON credentials to ~/.azure/azureProfile.json
       copy:
-        src: "{{ lookup('env', 'AZURE_AUTH_LOCATION') }}"
-        dest: "/home/ansible/.azure/azureProfile.json"
+        content: "{{ lookup('env', 'AZURE_AUTH_JSON') }}"
+        dest: /home/ansible/.azure/azureProfile.json
         mode: 0600
     
+    - name: Show path to written Azure profile (debug only)
+      command: cat /home/ansible/.azure/azureProfile.json
+      register: output
+
+    - name: Print output
+      debug:
+        var: output.stdout
+
+
     - name: Create a resource group named 'RG-AWX'
       azure.azcollection.azure_rm_resourcegroup:
         name: RG-AWX
         location: eastus
+
 
 
