@@ -1,8 +1,13 @@
-- name: Hello World Sample
+---
+- name: Create Azure Resource Group
   hosts: localhost
+  connection: local
   gather_facts: false
+
   tasks:
-    - name: Hello Message
-      debug:
-        msg: "Hello World!"
-    
+    - name: Create a resource group named 'RG-AWX'
+      azure.azcollection.azure_rm_resourcegroup:
+        name: RG-AWX
+        location: eastus
+
+
