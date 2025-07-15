@@ -5,6 +5,12 @@
   gather_facts: false
 
   tasks:
+    - name: Copy Azure JSON to the correct path
+      copy:
+        src: "{{ lookup('env', 'AZURE_AUTH_LOCATION') }}"
+        dest: "/home/ansible/.azure/azureProfile.json"
+        mode: 0600
+    
     - name: Create a resource group named 'RG-AWX'
       azure.azcollection.azure_rm_resourcegroup:
         name: RG-AWX
