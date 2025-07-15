@@ -5,10 +5,10 @@
   gather_facts: false
 
   vars:
-  azure_client_id: "{{ lookup('env', 'AZURE_CLIENT_ID') }}"
-  azure_secret: "{{ lookup('env', 'AZURE_SECRET') }}"
-  azure_tenant: "{{ lookup('env', 'AZURE_TENANT') }}"
-  azure_subscription_id: "{{ lookup('env', 'AZURE_SUBSCRIPTION_ID') }}"
+    azure_client_id: "{{ lookup('env', 'AZURE_CLIENT_ID') }}"
+    azure_secret: "{{ lookup('env', 'AZURE_SECRET') }}"
+    azure_tenant: "{{ lookup('env', 'AZURE_TENANT') }}"
+    azure_subscription_id: "{{ lookup('env', 'AZURE_SUBSCRIPTION_ID') }}"
   
   tasks:
     - name: Log in to Azure using az login
