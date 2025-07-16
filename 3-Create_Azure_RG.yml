@@ -11,6 +11,23 @@
     azure_subscription_id: "{{ lookup('env', 'AZURE_SUBSCRIPTION_ID') }}"
   
   tasks:
+    - name: Display AZURE_CLIENT_ID
+      debug:
+        msg: "AZURE_CLIENT_ID = {{ lookup('env', 'AZURE_CLIENT_ID') }}"
+
+    - name: Display AZURE_TENANT
+      debug:
+        msg: "AZURE_TENANT = {{ lookup('env', 'AZURE_TENANT') }}"
+
+    - name: Display AZURE_SUBSCRIPTION_ID
+      debug:
+        msg: "AZURE_SUBSCRIPTION_ID = {{ lookup('env', 'AZURE_SUBSCRIPTION_ID') }}"
+
+    - name: Display AZURE_SECRET (only for debug - remove in production)
+      debug:
+        msg: "AZURE_SECRET = {{ lookup('env', 'AZURE_SECRET') }}"
+      no_log: false  # Set to true before production
+
     - name: Log in to Azure using az login
       shell: |
         az login --service-principal -u "{{ azure_client_id }}" -p "{{ azure_secret }}" --tenant "{{ azure_tenant }}"
