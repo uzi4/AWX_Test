@@ -22,6 +22,12 @@
         msg: "AZURE_SECRET = {{ AZURE_SECRET }}"
       no_log: false  # Set to true before production
 
+    - name: Set MSAL env
+      shell: |
+        echo $AZURE_CORE_USE_MSAL_HTTP_CACHE
+      environment:
+        AZURE_CORE_USE_MSAL_HTTP_CACHE=false
+
     - name: Log in to Azure using az login
       shell: |
         az login --service-principal -u "{{ AZURE_CLIENT_ID }}" -p "{{ AZURE_SECRET }}" --tenant "{{ AZURE_TENANT }}"
