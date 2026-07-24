@@ -1,0 +1,13 @@
+---
+- hosts: vsrx
+  gather_facts: false
+
+  tasks:
+    - name: Show version
+      junipernetworks.junos.junos_command:
+        commands:
+          - show version
+      register: output
+
+    - debug:
+        var: output.stdout_lines
