@@ -1,6 +1,6 @@
 ---
    - name: Set interface description idempotently across vendors
-     hosts: vyos
+     hosts: all
      gather_facts: false
      tasks:
        - name: Set description on Juniper interface
