@@ -1,6 +1,6 @@
 ---
     - name: Verify connectivity to multi-vendor devices
-      hosts: junos_devices:vyos_devices
+      hosts: all
       gather_facts: false
       tasks:
         - name: Run a simple show version command
