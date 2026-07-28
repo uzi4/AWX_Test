@@ -1,0 +1,16 @@
+---
+   - name: Set interface description idempotently across vendors
+     hosts: vyos
+     gather_facts: false
+     tasks:
+       - name: Set description on Juniper interface
+         junipernetworks.junos.junos_config:
+           lines:
+             - set interfaces ge-0/0/0 description "Managed-by-Ansible"
+         when: ansible_network_os == 'junipernetworks.junos.junos'
+
+       - name: Set description on VyOS interface
+         vyos.vyos.vyos_config:
+           lines:
+             - set interfaces ethernet eth0 description 'Managed-by-Ansible'
+         when: ansible_network_os == 'vyos.vyos.vyos'
