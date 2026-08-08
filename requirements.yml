@@ -3,7 +3,5 @@ collections:
   - name: community.docker
   - name: kubernetes.core
   - name: junipernetworks.junos
-  - name: azure.azcollection
-    version: "2.6.0"
   - name: vyos.vyos
   - name: ansible.netcommon
