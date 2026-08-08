@@ -1,0 +1,37 @@
+---
+- name: AWS - VPC and subnet
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    aws_region: ap-south-1
+
+  tasks:
+
+    - name: Create VPC
+      amazon.aws.ec2_vpc_net:
+        name: ansible-demo-vpc
+        cidr_block: 10.20.0.0/16
+        region: "{{ aws_region }}"
+        state: present
+      register: vpc
+
+    - name: Create subnet
+      amazon.aws.ec2_vpc_subnet:
+        vpc_id: "{{ vpc.vpc.id }}"
+        cidr: 10.20.1.0/24
+        region: "{{ aws_region }}"
+        az: "{{ aws_region }}a"
+        tags:
+          Name: ansible-demo-subnet
+        state: present
+      register: subnet
+
+    - name: Show VPC
+      debug:
+        var: vpc.vpc.id
+
+    - name: Show subnet
+      debug:
+        var: subnet.subnet.id

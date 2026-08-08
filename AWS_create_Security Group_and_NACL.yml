@@ -1,0 +1,35 @@
+    - name: Create security group
+      amazon.aws.ec2_security_group:
+        name: ansible-demo-sg
+        description: Demo security group
+        vpc_id: "{{ vpc.vpc.id }}"
+        region: "{{ aws_region }}"
+        rules:
+          - proto: tcp
+            ports:
+              - 22
+            cidr_ip: 0.0.0.0/0
+            rule_desc: Allow SSH
+        state: present
+
+    - name: Create Network ACL
+      amazon.aws.ec2_vpc_nacl:
+        name: ansible-demo-nacl
+        vpc_id: "{{ vpc.vpc.id }}"
+        region: "{{ aws_region }}"
+        subnets:
+          - "{{ subnet.subnet.id }}"
+        ingress:
+          - rule_no: 100
+            protocol: tcp
+            cidr: 0.0.0.0/0
+            ports:
+              from: 22
+              to: 22
+            rule_action: allow
+        egress:
+          - rule_no: 100
+            protocol: -1
+            cidr: 0.0.0.0/0
+            rule_action: allow
+        state: present

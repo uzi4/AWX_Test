@@ -1,0 +1,14 @@
+---
+- name: Test AWS connectivity
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Get AWS caller identity
+      amazon.aws.aws_caller_info:
+      register: caller
+
+    - name: Show AWS identity
+      ansible.builtin.debug:
+        var: caller.account
