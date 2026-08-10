@@ -1,19 +1,20 @@
-    - name: Create Internet Gateway
-      amazon.aws.ec2_vpc_igw:
-        vpc_id: "{{ vpc.vpc.id }}"
-        region: "{{ aws_region }}"
-        state: present
-      register: igw
+---
+- name: Create Internet Gateway
+  amazon.aws.ec2_vpc_igw:
+    vpc_id: "{{ vpc.vpc.id }}"
+    region: "{{ aws_region }}"
+    state: present
+  register: igw
 
-    - name: Create route table
-      amazon.aws.ec2_vpc_route_table:
-        vpc_id: "{{ vpc.vpc.id }}"
-        region: "{{ aws_region }}"
-        subnets:
-          - "{{ subnet.subnet.id }}"
-        routes:
-          - dest: 0.0.0.0/0
-            gateway_id: "{{ igw.gateway_id }}"
-        tags:
-          Name: ansible-demo-route-table
-        state: present
+- name: Create route table
+  amazon.aws.ec2_vpc_route_table:
+    vpc_id: "{{ vpc.vpc.id }}"
+    region: "{{ aws_region }}"
+    subnets:
+      - "{{ subnet.subnet.id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ igw.gateway_id }}"
+    tags:
+      Name: ansible-demo-route-table
+    state: present
