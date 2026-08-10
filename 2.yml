@@ -28,6 +28,17 @@
         state: present
       register: subnet
 
+    - name: Create second subnet
+      amazon.aws.ec2_vpc_subnet:
+        vpc_id: "{{ vpc.vpc.id }}"
+        cidr: 10.20.2.0/24
+        az: "{{ aws_region }}b"
+        region: "{{ aws_region }}"
+        tags:
+          Name: ansible-demo-subnet-2
+        state: present
+      register: subnet2
+
     - name: Show VPC
       debug:
         var: vpc.vpc.id
@@ -35,3 +46,7 @@
     - name: Show subnet
       debug:
         var: subnet.subnet.id
+
+    - name: Show second subnet
+      ansible.builtin.debug:
+        var: subnet2.subnet.id
