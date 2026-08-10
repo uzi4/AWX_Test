@@ -1,0 +1,21 @@
+---
+- name: AWS - Routing and Connectivity
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - vars/aws.yml
+
+  tasks:
+
+    - name: Create Internet Gateway
+      amazon.aws.ec2_vpc_igw:
+        vpc_id: "{{ vpc_id }}"
+        region: "{{ aws_region }}"
+        state: present
+      register: igw
+
+    - name: Show igw
+      debug:
+        var: igw.igw.id

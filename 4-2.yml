@@ -9,13 +9,6 @@
 
   tasks:
 
-    - name: Create Internet Gateway
-      amazon.aws.ec2_vpc_igw:
-        vpc_id: "{{ vpc_id }}"
-        region: "{{ aws_region }}"
-        state: present
-      register: igw
-
     - name: Create default route
       amazon.aws.ec2_vpc_route_table:
         vpc_id: "{{ vpc_id }}"
@@ -24,9 +17,10 @@
           - "{{ subnet_id }}"
         routes:
           - dest: 0.0.0.0/0
-            gateway_id: "{{ lookup('amazon.aws.aws_gateway_facts', region=aws_region) }}"
+            gateway_id: "{{ gateway_id }}"
         state: present
+      register: route_table
 
-    - name: Show igw
+    - name: Show route table
       debug:
-        var: igw.igw.id
+        var: route_table.route_table.id
