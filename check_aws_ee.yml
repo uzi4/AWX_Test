@@ -1,48 +1,22 @@
 ---
-- name: Check AWS Ansible Execution Environment
+- name: Check AWS Ansible Environment
   hosts: localhost
   connection: local
   gather_facts: false
 
   tasks:
-
-    - name: Get Ansible version
-      ansible.builtin.command: ansible --version
-      register: ansible_version
+    - name: Ansible version
+      command: ansible --version
+      register: ansible_ver
       changed_when: false
 
-    - name: Get amazon.aws collection version
-      ansible.builtin.command: ansible-galaxy collection list amazon.aws
+    - name: AWS collection version
+      command: ansible-galaxy collection list amazon.aws
       register: aws_collection
       changed_when: false
 
-    - name: Get Python version
-      ansible.builtin.command: python3 --version
-      register: python_version
-      changed_when: false
-
-    - name: Get boto3 version
-      ansible.builtin.command:
-        cmd: python3 -c "import boto3; print(boto3.__version__)"
-      register: boto3_version
-      changed_when: false
-
-    - name: Get botocore version
-      ansible.builtin.command:
-        cmd: python3 -c "import botocore; print(botocore.__version__)"
-      register: botocore_version
-      changed_when: false
-
-    - name: Display versions
-      ansible.builtin.debug:
+    - name: Display
+      debug:
         msg:
-          - "===== ANSIBLE ====="
-          - "{{ ansible_version.stdout_lines }}"
-          - "===== AMAZON.AWS COLLECTION ====="
+          - "{{ ansible_ver.stdout_lines }}"
           - "{{ aws_collection.stdout_lines }}"
-          - "===== PYTHON ====="
-          - "{{ python_version.stdout }}"
-          - "===== BOTO3 ====="
-          - "{{ boto3_version.stdout }}"
-          - "===== BOTOCORE ====="
-          - "{{ botocore_version.stdout }}"
