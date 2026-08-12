@@ -30,7 +30,7 @@
       amazon.aws.ec2_vpc_vpn:
         state: present
         vpn_gateway_id: "{{ vgw.vgw.id }}"
-        customer_gateway_id: "{{ cgw.customer_gateway_id }}"
+        customer_gateway_id: "{{ cgw.gateway.customer_gateways[0].customer_gateway_id }}"
         static_only: true
         local_ipv4_network_cidr: "{{ onprem_cidr }}"
         region: "{{ aws_region }}"
