@@ -16,31 +16,6 @@
         region: "{{ aws_region }}"
       register: cgw
 
-    - name: Create and attach Virtual Private Gateway
-      amazon.aws.ec2_vpc_vgw:
-        state: present
-        name: ansible-course-vgw
-        vpc_id: "{{ vpc_id }}"
-        region: "{{ aws_region }}"
-        tags:
-          Name: ansible-course-vgw
-      register: vgw
-
-    - name: Create Site-to-Site VPN
-      amazon.aws.ec2_vpc_vpn:
-        state: present
-        vpn_gateway_id: "{{ vgw.vgw.id }}"
-        customer_gateway_id: "{{ cgw.gateway.customer_gateways[0].customer_gateway_id }}"
-        static_only: true
-        local_ipv4_network_cidr: "{{ onprem_cidr }}"
-        region: "{{ aws_region }}"
-        tags:
-          Name: ansible-course-vpn
-      register: vpn
-
-    - name: Display VPN resources
+    - name: Display complete Customer Gateway result
       ansible.builtin.debug:
-        msg:
-          - "Customer Gateway: {{ cgw.customer_gateway_id }}"
-          - "Virtual Private Gateway: {{ vgw.vgw.id }}"
-          - "VPN Connection: {{ vpn.vpn_connection_id }}"
+        var: cgw
