@@ -1,0 +1,26 @@
+---
+- name: AWS - Routing and Connectivity
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - vars/aws.yml
+
+  tasks:
+
+    - name: Create default route
+      amazon.aws.ec2_vpc_route_table:
+        vpc_id: "{{ vpc_id }}"
+        region: "{{ aws_region }}"
+        subnets:
+          - "{{ subnet_id }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ gateway_id }}"
+        state: present
+      register: route_table
+
+    - name: Show route table
+      debug:
+        var: route_table.route_table.id

@@ -1,0 +1,34 @@
+---
+- name: AWS - Application Load Balancer
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - vars/aws.yml
+
+  tasks:
+
+    - name: Create ALB security group
+      amazon.aws.ec2_security_group:
+        name: ansible-alb-sg
+        description: ALB security group
+        vpc_id: "{{ vpc_id }}"
+        region: "{{ aws_region }}"
+        rules:
+          - proto: tcp
+            ports: [80]
+            cidr_ip: 0.0.0.0/0
+      register: alb_sg
+
+    - name: Create Application Load Balancer
+      amazon.aws.elb_application_lb:
+        name: ansible-demo-alb
+        region: "{{ aws_region }}"
+        subnets:
+          - "{{ subnet_id }}"
+          - "{{ subnet2_id }}"
+        security_groups:
+          - "{{ alb_sg.group_id }}"
+        scheme: internet-facing
+        state: present

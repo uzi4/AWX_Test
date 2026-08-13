@@ -1,0 +1,44 @@
+---
+- name: Check AWS Ansible Environment
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Ansible version
+      command: ansible --version
+      register: ansible_ver
+      changed_when: false
+
+    - name: AWS collection version
+      command: ansible-galaxy collection list amazon.aws
+      register: aws_collection
+      changed_when: false
+
+    - name: Display
+      debug:
+        msg:
+          - "{{ ansible_ver.stdout_lines }}"
+          - "{{ aws_collection.stdout_lines }}"
+
+    - name: Check VGW module
+      command: ansible-doc amazon.aws.ec2_vpc_vgw
+      register: vgw
+      changed_when: false
+
+    - name: Check VPN module
+      command: ansible-doc amazon.aws.ec2_vpc_vpn
+      register: vpn
+      changed_when: false
+
+    - name: Check VPN info module
+      command: ansible-doc amazon.aws.ec2_vpc_vpn_info
+      register: vpn_info
+      changed_when: false
+
+    - name: Display available modules
+      debug:
+        msg:
+          - "VGW module: {{ vgw.rc == 0 }}"
+          - "VPN module: {{ vpn.rc == 0 }}"
+          - "VPN info module: {{ vpn_info.rc == 0 }}"

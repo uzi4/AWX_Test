@@ -5,3 +5,4 @@ collections:
   - name: junipernetworks.junos
   - name: vyos.vyos
   - name: ansible.netcommon
+  - name: community.aws
