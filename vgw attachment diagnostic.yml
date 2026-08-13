@@ -1,0 +1,16 @@
+---
+- name: Check VGW module parameters
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Show VGW documentation
+      ansible.builtin.command:
+        cmd: ansible-doc amazon.aws.ec2_vpc_vgw
+      register: docs
+      changed_when: false
+
+    - name: Display documentation
+      ansible.builtin.debug:
+        var: docs.stdout
