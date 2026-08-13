@@ -41,6 +41,6 @@
     - name: Display VPN resources
       ansible.builtin.debug:
         msg:
-          - "Customer Gateway: {{ cgw.customer_gateway_id }}"
+          - "Customer Gateway: {{ cgw.gateway.customer_gateway.customer_gateway_id }}"
           - "Virtual Private Gateway: {{ vgw.vgw.id }}"
           - "VPN Connection: {{ vpn.vpn_connection_id }}"
