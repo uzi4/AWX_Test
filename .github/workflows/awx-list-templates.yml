@@ -1,0 +1,25 @@
+name: AWX - List Job Templates
+
+on:
+  workflow_dispatch:
+
+jobs:
+  list-awx-templates:
+    runs-on: self-hosted
+
+    steps:
+      - name: Query AWX Job Templates
+        env:
+          AWX_TOKEN: ${{ secrets.AWX_TOKEN }}
+          AWX_URL: http://192.168.5.8:10445
+        run: |
+          echo "Connecting to AWX..."
+
+          curl -fsS \
+            -H "Authorization: Bearer $AWX_TOKEN" \
+            -H "Content-Type: application/json" \
+            "$AWX_URL/api/v2/job_templates/?page_size=200" \
+            -o awx-job-templates.json
+
+          echo "AWX Job Templates:"
+          cat awx-job-templates.json
