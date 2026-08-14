@@ -1,0 +1,15 @@
+name: Self-Hosted Runner Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-runner:
+    runs-on: self-hosted
+
+    steps:
+      - name: Test runner
+        run: |
+          echo "Hello from my self-hosted GitHub Actions runner"
+          echo "Hostname: $(hostname)"
+          echo "Runner is working successfully."
