@@ -1,0 +1,34 @@
+name: AWX - VyOS Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-awx-job:
+    runs-on: self-hosted
+
+    steps:
+      - name: Launch AWX Job Template
+        env:
+          AWX_TOKEN: ${{ secrets.AWX_TOKEN }}
+          AWX_URL: http://192.168.5.8:10445
+          JOB_TEMPLATE_ID: 38
+        run: |
+          echo "Launching AWX Job Template: vyos_test (ID: $JOB_TEMPLATE_ID)"
+
+          RESPONSE=$(curl -fsS \
+            -X POST \
+            -H "Authorization: Bearer $AWX_TOKEN" \
+            -H "Content-Type: application/json" \
+            "$AWX_URL/api/v2/job_templates/$JOB_TEMPLATE_ID/launch/")
+
+          echo "$RESPONSE"
+
+          JOB_ID=$(echo "$RESPONSE" | sed -n 's/.*"job":[[:space:]]*\([0-9]*\).*/\1/p')
+
+          if [ -z "$JOB_ID" ]; then
+            echo "ERROR: AWX did not return a Job ID."
+            exit 1
+          fi
+
+          echo "AWX Job ID: $JOB_ID"
