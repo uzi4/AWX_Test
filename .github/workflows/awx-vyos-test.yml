@@ -9,6 +9,7 @@ jobs:
 
     steps:
       - name: Launch AWX Job Template
+        id: launch
         env:
           AWX_TOKEN: ${{ secrets.AWX_TOKEN }}
           AWX_URL: http://192.168.5.8:10445
@@ -22,6 +23,7 @@ jobs:
             -H "Content-Type: application/json" \
             "$AWX_URL/api/v2/job_templates/$JOB_TEMPLATE_ID/launch/")
 
+          echo "AWX launch response:"
           echo "$RESPONSE"
 
           JOB_ID=$(echo "$RESPONSE" | sed -n 's/.*"job":[[:space:]]*\([0-9]*\).*/\1/p')
@@ -32,3 +34,46 @@ jobs:
           fi
 
           echo "AWX Job ID: $JOB_ID"
+          echo "job_id=$JOB_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for AWX Job
+        env:
+          AWX_TOKEN: ${{ secrets.AWX_TOKEN }}
+          AWX_URL: http://192.168.5.8:10445
+          JOB_ID: ${{ steps.launch.outputs.job_id }}
+        run: |
+          echo "Waiting for AWX Job $JOB_ID to complete..."
+
+          while true; do
+
+            RESPONSE=$(curl -fsS \
+              -H "Authorization: Bearer $AWX_TOKEN" \
+              -H "Content-Type: application/json" \
+              "$AWX_URL/api/v2/jobs/$JOB_ID/")
+
+            STATUS=$(echo "$RESPONSE" | sed -n 's/.*"status":"\([^"]*\)".*/\1/p')
+
+            echo "Current AWX status: $STATUS"
+
+            case "$STATUS" in
+              successful)
+                echo "AWX job completed successfully."
+                exit 0
+                ;;
+
+              failed|error|canceled|never_updated)
+                echo "AWX job failed with status: $STATUS"
+                exit 1
+                ;;
+
+              new|pending|waiting|running)
+                sleep 5
+                ;;
+
+              *)
+                echo "Unknown AWX job status: $STATUS"
+                sleep 5
+                ;;
+            esac
+
+          done
